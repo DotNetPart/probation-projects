@@ -25,31 +25,20 @@ namespace SomeLibrary
             AddUser(UserGenerator.CreateRandomUser());
         }
 
-        public void DeleteUser(User user)
+        public bool DeleteUser(User user)
         {
-            try
+            if (!users.Remove(user))
             {
-                if (users.Remove(user))
-                {
-                    throw new Exception("Can't delete. This user doesn't exist.");
-                }
+                return false;
             }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error: " + e.Message);
-            }
+
+            return true;
+            
         }
 
         public User FindByLogin(string login)
         {
-            foreach (var user in users)
-            {
-                if (user.Login == login)
-                {
-                    return user;
-                }
-            }
-            return null;
+            return users.Where(u => u.Login == login).FirstOrDefault();
         }
         
     }

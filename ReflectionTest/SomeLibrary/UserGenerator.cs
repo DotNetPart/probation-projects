@@ -10,13 +10,14 @@ namespace SomeLibrary
     {
         internal static User CreateRandomUser()
         {
-            User user = new User();
             Random rnd = new Random();
 
-            user.Login = rnd.Next().ToString();
-            user.Password = rnd.Next().ToString();
-            user.IsActive = true;
-            
+            var login = rnd.Next().ToString();
+            var password = rnd.Next().ToString();
+            var isActive = true;
+
+            User user = new User(login, password, isActive);
+
             return user;
         }
     }

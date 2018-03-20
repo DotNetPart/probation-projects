@@ -8,8 +8,6 @@ namespace SomeLibrary
 {
     public class User
     {
-        internal User() { }
-
         public User(string login, string password, bool isActive = false)
         {
             Login = login;
@@ -17,8 +15,8 @@ namespace SomeLibrary
             IsActive = isActive;
         }
 
-        public string Login { get; set; }
-        public string Password { get; set; }
+        public string Login { get; private set; }
+        public string Password { get; private set; }
         public bool IsActive { get; set; } = false;
 
     }
