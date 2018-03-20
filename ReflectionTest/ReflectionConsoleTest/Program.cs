@@ -30,10 +30,10 @@ namespace ReflectionConsoleTest
             Console.ReadKey();
         }
 
-        public static bool GetReflectionInfo(string assemblyNamespace)
+        public static void GetReflectionInfo(string assemblyNamespace)
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            IEnumerable<Type> types = new Type[0];
+            IEnumerable<Type> types = null;
             foreach (var assembly in assemblies)
             {
                 types = assembly.GetTypes().Where(t => t.Namespace == assemblyNamespace);
@@ -43,13 +43,6 @@ namespace ReflectionConsoleTest
                     break;
                 }
             }
-
-            if (!types.Any())
-            {
-                return false;
-            }
-
-            Console.WriteLine("\nReflection test: \n");
 
             foreach (Type type in types)
             {
@@ -65,8 +58,6 @@ namespace ReflectionConsoleTest
                     Console.WriteLine();
                 }
             }
-
-            return true;
         }
     }
 }
