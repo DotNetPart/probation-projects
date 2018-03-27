@@ -24,23 +24,27 @@ namespace ReflectionConsoleTest
             users.DeleteUser(users.FindByLogin("tsar"));
             users.DeleteUser(user);
 
-            GetReflectionInfo("SomeLibrary");
+
+            var types = GetTypesByNamespace("SomeLibrary");
+
+            ConsoleReflection(types);
+            CreateInterfaces(types, "C:\\Users\\suhan\\Desktop"); // Change the path, if not working
 
             Console.WriteLine("Press any key...");
             Console.ReadKey();
         }
 
-        private static void GetReflectionInfo(string assemblyNamespace)
+        private static IEnumerable<Type> GetTypesByNamespace(string assemblyNamespace)
         {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            //IEnumerable<Type> types = null;
-            foreach (var assembly in assemblies)
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 var types = assembly.GetTypes().Where(t => t.Namespace == assemblyNamespace);
-
-                ConsoleReflection(types);
-                OtherConsoleReflection(types);
+                if (types.Any())
+                {
+                    return types;
+                }
             }
+            return null;
         }
 
         private static void ConsoleReflection(IEnumerable<Type> types)
@@ -61,20 +65,13 @@ namespace ReflectionConsoleTest
             }
         }
 
-        private static void OtherConsoleReflection(IEnumerable<Type> types)
-        {
+        private static void CreateInterfaces(IEnumerable<Type> types, string destPath)
+        { 
             foreach (Type type in types)
             {
-                IEnumerable<MemberInfo> membersInfo = type.GetTypeInfo().DeclaredMembers;
-                if (type.IsClass)
+                if (type.IsPublic && !type.IsAbstract && type.IsClass)
                 {
-                    Console.WriteLine($"##Class: { type.Name }");
-
-                    foreach (var member in membersInfo)
-                    {
-                        Console.WriteLine($"####{ member.MemberType }: { member.Name }");
-                    }
-                    Console.WriteLine();
+                    InterfaceBuilder.BuildInterface(type, destPath);
                 }
             }
         }

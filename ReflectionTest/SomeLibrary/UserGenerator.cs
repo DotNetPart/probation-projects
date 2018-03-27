@@ -16,9 +16,7 @@ namespace SomeLibrary
             var password = rnd.Next().ToString();
             var isActive = true;
 
-            User user = new User(login, password, isActive);
-
-            return user;
+            return new User(login, password, isActive);
         }
     }
 }

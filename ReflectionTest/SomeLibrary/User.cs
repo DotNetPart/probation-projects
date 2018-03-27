@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SomeLibrary
 {
-    public class User
+    public class User : IUser
     {
         public User(string login, string password, bool isActive = false)
         {
