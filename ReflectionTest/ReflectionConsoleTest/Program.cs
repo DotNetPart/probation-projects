@@ -12,23 +12,26 @@ namespace ReflectionConsoleTest
     {
         static void Main(string[] args)
         {
-            var user = new User("tsar", "12345", true);
-            var users = new UserStorage();
-
-            for (int i = 0; i < 20; i++)
             {
-                users.AddRandomUser();
+                var user = new User("tsar", "12345", true);
+                var users = new UserStorage();
+
+                for (int i = 0; i < 20; i++)
+                {
+                    users.AddRandomUser();
+                }
+
+                users.AddUser(user);
+                users.DeleteUser(users.FindByLogin("tsar"));
+                users.DeleteUser(user);
             }
 
-            users.AddUser(user);
-            users.DeleteUser(users.FindByLogin("tsar"));
-            users.DeleteUser(user);
-
-
             var types = GetTypesByNamespace("SomeLibrary");
+            var interfacesPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            var interfaceBuilder = new InterfaceBuilder();
+            //ConsoleReflection(types);
 
-            ConsoleReflection(types);
-            CreateInterfaces(types, "C:\\Users\\suhan\\Desktop"); // Change the path, if not working
+            interfaceBuilder.CreateInterfacesByTypes(types, interfacesPath);
 
             Console.WriteLine("Press any key...");
             Console.ReadKey();
@@ -61,18 +64,6 @@ namespace ReflectionConsoleTest
                         Console.WriteLine($"----{ member.MemberType } name: { member.Name }");
                     }
                     Console.WriteLine();
-                }
-            }
-        }
-
-        private static void CreateInterfaces(IEnumerable<Type> types, string destPath)
-        { 
-            foreach (Type type in types)
-            {
-                if (type.IsPublic && !type.IsAbstract && type.IsClass)
-                {
-                    var builder = new InterfaceBuilder();
-                    builder.BuildInterface(type, destPath);
                 }
             }
         }

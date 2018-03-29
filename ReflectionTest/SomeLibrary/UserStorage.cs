@@ -22,7 +22,7 @@ namespace SomeLibrary
 
         public void AddRandomUser()
         {
-            AddUser(new UserGenerator().CreateRandomUser());
+            AddUser(UserGenerator.CreateRandomUser());
         }
 
         public bool DeleteUser(User user)

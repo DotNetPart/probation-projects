@@ -13,4 +13,6 @@ namespace SomeLibrary
         Boolean IsActive { get; set; }
     }
 
+
+
 }

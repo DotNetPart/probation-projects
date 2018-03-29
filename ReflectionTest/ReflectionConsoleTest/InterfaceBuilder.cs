@@ -10,43 +10,44 @@ namespace ReflectionConsoleTest
 {
     public class InterfaceBuilder
     {
-        public void BuildInterface(Type type, string destPath)
+        public void CreateInterfacesByTypes(IEnumerable<Type> types, string destinationPath)
         {
-            IEnumerable<MemberInfo> members = type.GetTypeInfo().DeclaredMembers;
-            var file = destPath + "//"+ "I" + type.Name + ".cs";
-            File.Delete(file);
+            foreach (Type type in types)
+            {
+                if (type.IsPublic && !type.IsAbstract && type.IsClass)
+                {
+                    var builder = new InterfaceBuilder();
+                    builder.BuildInterfaceToFile(type, destinationPath);
+                }
+            }
+        }
+
+        public void BuildInterfaceToFile(Type type, string destinationPath)
+        {
+            var file = destinationPath + "//"+ "I" + type.Name + ".cs";
             StreamWriter sw = File.CreateText(file);
 
             sw.WriteLine($"public interface I{type.Name}");
             sw.WriteLine("{");
 
+            IEnumerable<MemberInfo> members = type.GetTypeInfo().DeclaredMembers;
             foreach (var member in members)
             {
                 switch (member.MemberType)
                 {
                     case MemberTypes.Property:
-                        {
-
+                        { 
                             var property = (PropertyInfo)member;
-                            var propTypeName = property.PropertyType.Name;
 
                             if (property.PropertyType.IsGenericType)
                             {
                                 sw.Write("    ");
-                                sw.Write($"{ propTypeName.Split('`')[0] }<{ property.PropertyType.GetGenericArguments()[0].Name }> { property.Name } ");
+                                sw.Write($"{ property.PropertyType.Name.Split('`')[0] }<{ property.PropertyType.GetGenericArguments()[0].Name }> { property.Name } ");
                             }
                             else
                             {
-                                
                                 sw.Write("    ");
-                                if (property.PropertyType.Namespace == "System")
-                                {
-                                    sw.Write($"{ propTypeName.ToLower() } { property.Name } ");
-                                }
-                                else
-                                {
-                                    sw.Write($"{ propTypeName } { property.Name } ");
-                                }
+                                sw.Write($"{ property.PropertyType.Name } { property.Name } ");
                             }
 
                             var accessors = property.GetAccessors();
@@ -86,14 +87,14 @@ namespace ReflectionConsoleTest
                             else
                             {
                                 sw.Write("    ");
-                                if (method.ReturnType.Namespace == "System")
-                                {
-                                    sw.Write($"{ method.ReturnType.Name.ToLower() } { method.Name } ");
-                                }
-                                else
-                                {
-                                    sw.Write($"{ method.ReturnType.Name } { method.Name }");
-                                }
+                                    if (method.ReturnType.Name == "Void")
+                                    {
+                                        sw.Write($"void { method.Name } ");
+                                    }
+                                    else
+                                    {
+                                        sw.Write($"{ method.ReturnType.Name } { method.Name } ");
+                                    }
                             }
 
 
