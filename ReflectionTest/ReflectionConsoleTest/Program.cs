@@ -71,7 +71,8 @@ namespace ReflectionConsoleTest
             {
                 if (type.IsPublic && !type.IsAbstract && type.IsClass)
                 {
-                    InterfaceBuilder.BuildInterface(type, destPath);
+                    var builder = new InterfaceBuilder();
+                    builder.BuildInterface(type, destPath);
                 }
             }
         }

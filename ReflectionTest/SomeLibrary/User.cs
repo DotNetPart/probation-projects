@@ -17,7 +17,7 @@ namespace SomeLibrary
 
         public string Login { get; private set; }
         public string Password { get; private set; }
-        public bool IsActive { get; set; } = false;
+        public bool IsActive { get; set; }
 
     }
 }

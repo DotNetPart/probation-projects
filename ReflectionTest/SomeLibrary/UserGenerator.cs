@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SomeLibrary
 {
-    internal static class UserGenerator
+    internal class UserGenerator
     {
-        internal static User CreateRandomUser()
+        internal User CreateRandomUser()
         {
             Random rnd = new Random();
 

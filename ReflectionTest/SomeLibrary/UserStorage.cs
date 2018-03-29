@@ -22,7 +22,7 @@ namespace SomeLibrary
 
         public void AddRandomUser()
         {
-            AddUser(UserGenerator.CreateRandomUser());
+            AddUser(new UserGenerator().CreateRandomUser());
         }
 
         public bool DeleteUser(User user)
@@ -31,9 +31,7 @@ namespace SomeLibrary
             {
                 return false;
             }
-
-            return true;
-            
+            return true;         
         }
 
         public User FindByLogin(string login)

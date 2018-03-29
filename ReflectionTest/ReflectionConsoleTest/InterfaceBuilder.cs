@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace ReflectionConsoleTest
 {
-    public static class InterfaceBuilder
+    public class InterfaceBuilder
     {
-        public static void BuildInterface(Type type, string destPath)
+        public void BuildInterface(Type type, string destPath)
         {
             IEnumerable<MemberInfo> members = type.GetTypeInfo().DeclaredMembers;
-            var file = destPath + "//" + type.Name + ".cs";
+            var file = destPath + "//"+ "I" + type.Name + ".cs";
             File.Delete(file);
             StreamWriter sw = File.CreateText(file);
 
@@ -30,15 +30,16 @@ namespace ReflectionConsoleTest
                             var property = (PropertyInfo)member;
                             var propTypeName = property.PropertyType.Name;
 
-                            if (propTypeName.Contains("`"))
+                            if (property.PropertyType.IsGenericType)
                             {
                                 sw.Write("    ");
                                 sw.Write($"{ propTypeName.Split('`')[0] }<{ property.PropertyType.GetGenericArguments()[0].Name }> { property.Name } ");
                             }
                             else
                             {
+                                
                                 sw.Write("    ");
-                                if (propTypeName == "Void")
+                                if (property.PropertyType.Namespace == "System")
                                 {
                                     sw.Write($"{ propTypeName.ToLower() } { property.Name } ");
                                 }
@@ -77,8 +78,7 @@ namespace ReflectionConsoleTest
                             {
                                 break;
                             }
-
-                            if (method.ReturnType.Name.Contains("`"))
+                            if (method.ReturnType.IsGenericType)
                             {
                                 sw.Write("    ");
                                 sw.Write($"{ method.ReturnType.Name.Split('`')[0] }<{ method.ReturnType.GetGenericArguments()[0].Name }> { method.Name }");
@@ -86,7 +86,7 @@ namespace ReflectionConsoleTest
                             else
                             {
                                 sw.Write("    ");
-                                if (method.ReturnType.Name == "Void")
+                                if (method.ReturnType.Namespace == "System")
                                 {
                                     sw.Write($"{ method.ReturnType.Name.ToLower() } { method.Name } ");
                                 }
